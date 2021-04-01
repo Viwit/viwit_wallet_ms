@@ -6,7 +6,6 @@ defmodule Transaction.Module.Trans do
     field :id_method_payment, :integer
     field :mount, :integer
     field :status, :string
-    field :transaction_id, :integer
     field :type, :integer
     field :wallet_id, :integer
 
@@ -16,8 +15,7 @@ defmodule Transaction.Module.Trans do
   @doc false
   def changeset(trans, attrs) do
     trans
-    |> cast(attrs, [:transaction_id, :wallet_id, :id_method_payment, :date, :mount, :type, :status])
-    |> validate_required([:transaction_id, :wallet_id, :id_method_payment, :date, :mount, :type, :status])
-    |> unique_constraint(:transaction_id)
+    |> cast(attrs, [:wallet_id, :id_method_payment, :mount, :type, :status])
+    |> validate_required([:wallet_id, :id_method_payment, :mount, :type, :status])
   end
 end

@@ -12,10 +12,8 @@ defmodule TransactionWeb.TransView do
 
   def render("trans.json", %{trans: trans}) do
     %{id: trans.id,
-      transaction_id: trans.transaction_id,
       wallet_id: trans.wallet_id,
       id_method_payment: trans.id_method_payment,
-      date: trans.date,
       mount: trans.mount,
       type: trans.type,
       status: trans.status}

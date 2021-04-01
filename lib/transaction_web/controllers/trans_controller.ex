@@ -3,6 +3,7 @@ defmodule TransactionWeb.TransController do
 
   alias Transaction.Module
   alias Transaction.Module.Trans
+  alias TransactionWeb.WalletController
 
   action_fallback TransactionWeb.FallbackController
 
@@ -40,4 +41,8 @@ defmodule TransactionWeb.TransController do
       send_resp(conn, :no_content, "")
     end
   end
+
+
+
+
 end

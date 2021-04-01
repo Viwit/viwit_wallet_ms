@@ -12,6 +12,7 @@ defmodule TransactionWeb.WalletController do
   end
 
   def create(conn, %{"wallet" => wallet_params}) do
+    wallet_params = Map.put_new(wallet_params, "balance", 0)
     with {:ok, %Wallet{} = wallet} <- Module.create_wallet(wallet_params) do
       conn
       |> put_status(:created)
@@ -21,6 +22,7 @@ defmodule TransactionWeb.WalletController do
   end
 
   def show(conn, %{"id" => id}) do
+    IO.inspect conn
     wallet = Module.get_wallet!(id)
     render(conn, "show.json", wallet: wallet)
   end

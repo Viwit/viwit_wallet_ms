@@ -7,8 +7,8 @@ defmodule TransactionWeb.Router do
 
   scope "/", TransactionWeb do
     pipe_through :api
-    resources "/wallet", WalletController, except: [:new, :edit]
-    resources "/transaction", TransController, except: [:new, :edit, :update, :delete]
+    resources "/wallet", WalletController, except: [:delete, :update]
+    resources "/transaction", TransController, except: [:update, :delete]
   end
 
   # Enables LiveDashboard only for development
