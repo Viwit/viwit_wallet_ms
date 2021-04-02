@@ -27,12 +27,26 @@ defmodule TransactionWeb.WalletController do
     render(conn, "show.json", wallet: wallet)
   end
 
+
   def update(conn, %{"id" => id, "wallet" => wallet_params}) do
     wallet = Module.get_wallet!(id)
 
     with {:ok, %Wallet{} = wallet} <- Module.update_wallet(wallet, wallet_params) do
       render(conn, "show.json", wallet: wallet)
     end
+  end
+
+  def update_balance(conn, trans_params) do
+   type = Map.get(trans_params,"type")
+    id = Map.get(trans_params,"wallet_id")
+    wallet = Module.get_wallet!(id)
+if type == 1 do
+  wallet = Map.put(wallet_params, :balance, (Map.get(trans_params,"mount")+Map.get(wallet_params,:balance)) )
+else
+  wallet = Map.put(wallet_params, :balance, (Map.get(trans_params,"mount")+Map.get(wallet_params,:balance)))
+end
+update(conn, wallet_params)
+
   end
 
   def delete(conn, %{"id" => id}) do
