@@ -8,6 +8,7 @@ defmodule Transaction.Repo.Migrations.CreateTransaction do
       add :mount, :integer
       add :type, :integer
       add :status, :string
+      add :token, :string
 
       timestamps()
     end

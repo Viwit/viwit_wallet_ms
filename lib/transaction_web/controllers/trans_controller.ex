@@ -13,12 +13,21 @@ defmodule TransactionWeb.TransController do
   end
 
   def create(conn, %{"trans" => trans_params}) do
-    WalletController.update_balance(trans_params)
+    trans_params = update_status(WalletController.update_balance(trans_params), trans_params)
+
     with {:ok, %Trans{} = trans} <- Module.create_trans(trans_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.trans_path(conn, :show, trans))
       |> render("show.json", trans: trans)
+    end
+  end
+
+  defp update_status(what, trans_params) do
+    if what do
+      trans_params = Map.put_new(trans_params, "status", "Accepted")
+    else
+      trans_params = Map.put_new(trans_params, "status", "Rejected")
     end
   end
 
@@ -42,8 +51,4 @@ defmodule TransactionWeb.TransController do
       send_resp(conn, :no_content, "")
     end
   end
-
-
-
-
 end

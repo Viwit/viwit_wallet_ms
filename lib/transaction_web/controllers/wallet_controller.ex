@@ -41,7 +41,7 @@ defmodule TransactionWeb.WalletController do
     type = Map.get(trans_params, "type")
     id = Map.get(trans_params, "wallet_id")
     wallet = Module.get_wallet!(id)
-    wallet1 = update_balance_aux(type, trans_params, wallet);
+    wallet1 = update_balance_aux(type, trans_params, wallet)
 
     a = %{
       "balance" => Map.get(wallet1, :balance),
@@ -49,16 +49,26 @@ defmodule TransactionWeb.WalletController do
       "user_id" => Map.get(wallet1, :user_id)
     }
 
-    with {:ok, %Wallet{} = wallet} <- Module.update_wallet(wallet, a) do
-      IO.puts("Hecho")
+    if Map.get(wallet1, :balance) != Map.get(wallet, :balance) do
+      with {:ok, %Wallet{} = wallet} <- Module.update_wallet(wallet, a) do
+        IO.puts("Transaction successfull done")
+        true
+      end
+    else
+      IO.puts("Transaction rejected")
+      false
     end
   end
 
   def update_balance_aux(type, trans_params, wallet) do
-    if type == 1 do
+    if Map.get(trans_params, "token") == Map.get(wallet, :token) do
+      if type == 1 do
         Map.put(wallet, :balance, Map.get(trans_params, "mount") + Map.get(wallet, :balance))
+      else
+        Map.put(wallet, :balance, Map.get(wallet, :balance) - Map.get(trans_params, "mount"))
+      end
     else
-        Map.put(wallet, :balance, Map.get(trans_params, "mount") - Map.get(wallet, :balance))
+      wallet
     end
   end
 

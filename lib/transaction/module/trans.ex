@@ -8,6 +8,7 @@ defmodule Transaction.Module.Trans do
     field :status, :string
     field :type, :integer
     field :wallet_id, :integer
+    field :token, :string
 
     timestamps()
   end
@@ -15,7 +16,7 @@ defmodule Transaction.Module.Trans do
   @doc false
   def changeset(trans, attrs) do
     trans
-    |> cast(attrs, [:wallet_id, :id_method_payment, :mount, :type, :status])
-    |> validate_required([:wallet_id, :id_method_payment, :mount, :type, :status])
+    |> cast(attrs, [:wallet_id, :id_method_payment, :mount, :type, :status, :token])
+    |> validate_required([:wallet_id, :id_method_payment, :mount, :type, :token])
   end
 end
