@@ -13,7 +13,7 @@ defmodule TransactionWeb.TransController do
   end
 
   def create(conn, %{"trans" => trans_params}) do
-    WalletController.update_balance(conn, trans_params)
+    WalletController.update_balance(trans_params)
     with {:ok, %Trans{} = trans} <- Module.create_trans(trans_params) do
       conn
       |> put_status(:created)

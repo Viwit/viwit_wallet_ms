@@ -13,6 +13,7 @@ defmodule TransactionWeb.WalletController do
 
   def create(conn, %{"wallet" => wallet_params}) do
     wallet_params = Map.put_new(wallet_params, "balance", 0)
+
     with {:ok, %Wallet{} = wallet} <- Module.create_wallet(wallet_params) do
       conn
       |> put_status(:created)
@@ -22,31 +23,43 @@ defmodule TransactionWeb.WalletController do
   end
 
   def show(conn, %{"id" => id}) do
-    IO.inspect conn
+    IO.inspect(conn)
     wallet = Module.get_wallet!(id)
     render(conn, "show.json", wallet: wallet)
   end
 
-
   def update(conn, %{"id" => id, "wallet" => wallet_params}) do
     wallet = Module.get_wallet!(id)
+    IO.inspect(wallet_params)
 
     with {:ok, %Wallet{} = wallet} <- Module.update_wallet(wallet, wallet_params) do
       render(conn, "show.json", wallet: wallet)
     end
   end
 
-  def update_balance(conn, trans_params) do
-   type = Map.get(trans_params,"type")
-    id = Map.get(trans_params,"wallet_id")
+  def update_balance(trans_params) do
+    type = Map.get(trans_params, "type")
+    id = Map.get(trans_params, "wallet_id")
     wallet = Module.get_wallet!(id)
-if type == 1 do
-  wallet = Map.put(wallet_params, :balance, (Map.get(trans_params,"mount")+Map.get(wallet_params,:balance)) )
-else
-  wallet = Map.put(wallet_params, :balance, (Map.get(trans_params,"mount")+Map.get(wallet_params,:balance)))
-end
-update(conn, wallet_params)
+    wallet1 = update_balance_aux(type, trans_params, wallet);
 
+    a = %{
+      "balance" => Map.get(wallet1, :balance),
+      "token" => Map.get(wallet1, :token),
+      "user_id" => Map.get(wallet1, :user_id)
+    }
+
+    with {:ok, %Wallet{} = wallet} <- Module.update_wallet(wallet, a) do
+      IO.puts("Hecho")
+    end
+  end
+
+  def update_balance_aux(type, trans_params, wallet) do
+    if type == 1 do
+        Map.put(wallet, :balance, Map.get(trans_params, "mount") + Map.get(wallet, :balance))
+    else
+        Map.put(wallet, :balance, Map.get(trans_params, "mount") - Map.get(wallet, :balance))
+    end
   end
 
   def delete(conn, %{"id" => id}) do
