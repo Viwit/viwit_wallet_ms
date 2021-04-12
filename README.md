@@ -10,6 +10,13 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
+
+To start as a Docker container:
+
+* Build the project using `docker-compose build`
+* Start the project using `docker-compose up`
+
+
 ## Learn more
 
   * Official website: https://www.phoenixframework.org/
