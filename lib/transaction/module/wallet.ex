@@ -14,7 +14,7 @@ defmodule Transaction.Module.Wallet do
   @doc false
   def changeset(wallet, attrs) do
     wallet
-    |> cast(attrs, [:user_id, :balance, :token])
+    |> cast(attrs,[:user_id, :balance, :token])
     |> validate_required([:user_id, :token])
   end
 end

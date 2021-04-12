@@ -49,10 +49,15 @@ defmodule TransactionWeb.WalletController do
       "user_id" => Map.get(wallet1, :user_id)
     }
 
-    if Map.get(wallet1, :balance) != Map.get(wallet, :balance) do
-      with {:ok, %Wallet{} = wallet} <- Module.update_wallet(wallet, a) do
-        IO.puts("Transaction successfull done")
-        true
+    if Map.get(wallet1, :balance) != Map.get(wallet, :balance) and Map.get(trans_params, "mount") > 0 do
+      if type == 0 and Map.get(wallet, :balance) < Map.get(trans_params, "mount") do
+        IO.puts("Transaction rejected by lack of balance.")
+        false
+      else
+        with {:ok, %Wallet{} = wallet} <- Module.update_wallet(wallet, a) do
+          IO.puts("Transaction successfull done")
+          true
+        end
       end
     else
       IO.puts("Transaction rejected")

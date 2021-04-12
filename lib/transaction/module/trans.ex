@@ -17,6 +17,6 @@ defmodule Transaction.Module.Trans do
   def changeset(trans, attrs) do
     trans
     |> cast(attrs, [:wallet_id, :id_method_payment, :mount, :type, :status, :token])
-    |> validate_required([:wallet_id, :id_method_payment, :mount, :type, :token])
+    |> validate_required([:wallet_id, :mount, :type, :token])
   end
 end
