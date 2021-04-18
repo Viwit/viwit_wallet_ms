@@ -1,10 +1,57 @@
 defmodule TransactionWeb.WalletController do
+  import Plug.Conn.Status, only: [code: 1]
   use TransactionWeb, :controller
+  use PhoenixSwagger
 
   alias Transaction.Module
   alias Transaction.Module.Wallet
 
   action_fallback TransactionWeb.FallbackController
+
+  swagger_path :index do
+    get("/wallet")
+    response(code(:ok), "Success")
+    summary("Get list of all wallets")
+    description("For show all created wallets")
+    produces("application/json")
+    tag("wallet")
+    # operationId("getwallets")
+    paging
+    # parameters ()
+    response(200, "OK")
+    response(400, "Not found")
+  end
+
+  swagger_path :create do
+    post("/wallet")
+    response(code(:ok), "Success")
+    summary("Create a wallet")
+    description("This can create a wallet for a logged user")
+    produces("application/json")
+    tag("wallet")
+    # operationId("getwallets")
+    paging
+    # parameters ()
+    response(200, "OK")
+    response(400, "Not found")
+  end
+
+
+  swagger_path :show do
+    PhoenixSwagger.Path.get("/wallet/{id}")
+    response(code(:ok), "Success")
+    summary("Get wallet by its id")
+     description ("For search an specific wallet")
+  produces ("application/json")
+  tag "wallet"
+  #operationId("getwallets")
+  paging
+  #parameter :id, :path
+  parameter :id, :path, :integer, "WalletID", required: true, example: 1
+  response 200, "OK"
+  response 400, "Not found"
+  end
+
 
   def index(conn, _params) do
     wallet = Module.list_wallet()
@@ -49,7 +96,8 @@ defmodule TransactionWeb.WalletController do
       "user_id" => Map.get(wallet1, :user_id)
     }
 
-    if Map.get(wallet1, :balance) != Map.get(wallet, :balance) and Map.get(trans_params, "mount") > 0 do
+    if Map.get(wallet1, :balance) != Map.get(wallet, :balance) and
+         Map.get(trans_params, "mount") > 0 do
       if type == 0 and Map.get(wallet, :balance) < Map.get(trans_params, "mount") do
         IO.puts("Transaction rejected by lack of balance.")
         false

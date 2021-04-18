@@ -1,5 +1,7 @@
 defmodule TransactionWeb.TransController do
   use TransactionWeb, :controller
+  use PhoenixSwagger
+  import Plug.Conn.Status, only: [code: 1]
 
   alias Transaction.Module
   alias Transaction.Module.Trans
@@ -7,6 +9,34 @@ defmodule TransactionWeb.TransController do
 
   action_fallback TransactionWeb.FallbackController
 
+
+  swagger_path :index do
+    get("/transaction")
+    response(code(:ok), "Success")
+    summary("Get list of all transactions")
+    description("For show all created transactions")
+    produces("application/json")
+    tag("transaction")
+    # operationId("getwallets")
+    paging
+    # parameters ()
+    response(200, "OK")
+    response(400, "Not found")
+  end
+
+  swagger_path :create do
+    post("/transaction")
+    response(code(:ok), "Success")
+    summary("Try to make a transaction")
+    description("This can attempt to carry out a transaction and if it is valid it will update the specified wallet")
+    produces("application/json")
+    tag("transaction")
+    # operationId("getwallets")
+    paging
+    # parameters ()
+    response(200, "OK")
+    response(400, "Not found")
+  end
   def index(conn, _params) do
     transaction = Module.list_transaction()
     render(conn, "index.json", transaction: transaction)
