@@ -1,7 +1,77 @@
 basePath: /
 consumes:
   - application/json
-definitions: {}
+definitions:
+  Transaction:
+    description: A transaction made by an user
+    example:
+      id_method_payment: 1
+      mount: 3000
+      token: algo
+      transaction_id: 10
+      type: 1
+      user_id: 1
+    properties:
+      id_method_payment:
+        description: In case of wallet recharging is used to identify methos user for payment
+        type: integer
+      mount:
+        description: Amount of transaction
+        type: integer
+      token:
+        description: To verify wallet correspondence
+        type: string
+      transaction_id:
+        description: Unique identifier of a transaction
+        type: string
+      type:
+        description: Identify the kind of transaction
+        type: integer
+      user_id:
+        description: User who make a transaction
+        type: integer
+    required:
+      - user_id
+      - transaction_id
+    title: Transaction
+    type: object
+  Transactions:
+    description: A collection of transactions
+    items:
+      $ref: '#/definitions/Transaction'
+    title: Transactions
+    type: array
+  Wallet:
+    description: A wallet related to a user
+    example:
+      balance: 10000
+      token: DU7342w98weujafbsaxvw324734w
+      user_id: 5
+      wallet_id: 4
+    properties:
+      balance:
+        description: Wallet balance
+        type: integer
+      token:
+        description: Wallet token
+        type: string
+      user_id:
+        description: Owner of the wallet
+        type: integer
+      wallet_id:
+        description: Unique identifier of a wallet
+        type: string
+    required:
+      - user_id
+      - wallet_id
+    title: Wallet
+    type: object
+  Wallets:
+    description: A collection of Wallets
+    items:
+      $ref: '#/definitions/Wallet'
+    title: Wallets
+    type: array
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
@@ -19,24 +89,14 @@ paths:
     get:
       description: For show all created transactions
       operationId: TransactionWeb.TransController.index
-      parameters:
-        - description: Number of elements per page
-          in: query
-          minimum: 1
-          name: page_size
-          required: false
-          type: integer
-        - description: Number of the page
-          in: query
-          minimum: 1
-          name: page
-          required: false
-          type: integer
+      parameters: []
       produces:
         - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Transactions'
         '400':
           description: Not found
       summary: Get list of all transactions
@@ -45,24 +105,14 @@ paths:
     post:
       description: This can attempt to carry out a transaction and if it is valid it will update the specified wallet
       operationId: TransactionWeb.TransController.create
-      parameters:
-        - description: Number of elements per page
-          in: query
-          minimum: 1
-          name: page_size
-          required: false
-          type: integer
-        - description: Number of the page
-          in: query
-          minimum: 1
-          name: page
-          required: false
-          type: integer
+      parameters: []
       produces:
         - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Transaction'
         '400':
           description: Not found
       summary: Try to make a transaction
@@ -72,24 +122,14 @@ paths:
     get:
       description: For show all created wallets
       operationId: TransactionWeb.WalletController.index
-      parameters:
-        - description: Number of elements per page
-          in: query
-          minimum: 1
-          name: page_size
-          required: false
-          type: integer
-        - description: Number of the page
-          in: query
-          minimum: 1
-          name: page
-          required: false
-          type: integer
+      parameters: []
       produces:
         - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Wallets'
         '400':
           description: Not found
       summary: Get list of all wallets
@@ -98,24 +138,14 @@ paths:
     post:
       description: This can create a wallet for a logged user
       operationId: TransactionWeb.WalletController.create
-      parameters:
-        - description: Number of elements per page
-          in: query
-          minimum: 1
-          name: page_size
-          required: false
-          type: integer
-        - description: Number of the page
-          in: query
-          minimum: 1
-          name: page
-          required: false
-          type: integer
+      parameters: []
       produces:
         - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Wallet'
         '400':
           description: Not found
       summary: Create a wallet
@@ -126,18 +156,6 @@ paths:
       description: For search an specific wallet
       operationId: TransactionWeb.WalletController.show
       parameters:
-        - description: Number of elements per page
-          in: query
-          minimum: 1
-          name: page_size
-          required: false
-          type: integer
-        - description: Number of the page
-          in: query
-          minimum: 1
-          name: page
-          required: false
-          type: integer
         - description: WalletID
           in: path
           name: id
@@ -149,6 +167,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Wallet'
         '400':
           description: Not found
       summary: Get wallet by its id

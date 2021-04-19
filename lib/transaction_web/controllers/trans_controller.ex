@@ -9,7 +9,6 @@ defmodule TransactionWeb.TransController do
 
   action_fallback TransactionWeb.FallbackController
 
-
   swagger_path :index do
     get("/transaction")
     response(code(:ok), "Success")
@@ -18,9 +17,8 @@ defmodule TransactionWeb.TransController do
     produces("application/json")
     tag("transaction")
     # operationId("getwallets")
-    paging
     # parameters ()
-    response(200, "OK")
+    response(200, "OK", Schema.ref(:Transactions))
     response(400, "Not found")
   end
 
@@ -28,15 +26,58 @@ defmodule TransactionWeb.TransController do
     post("/transaction")
     response(code(:ok), "Success")
     summary("Try to make a transaction")
-    description("This can attempt to carry out a transaction and if it is valid it will update the specified wallet")
+
+    description(
+      "This can attempt to carry out a transaction and if it is valid it will update the specified wallet"
+    )
+
     produces("application/json")
     tag("transaction")
     # operationId("getwallets")
-    paging
     # parameters ()
-    response(200, "OK")
+    response(200, "OK", Schema.ref(:Transaction))
     response(400, "Not found")
   end
+
+  def swagger_definitions do
+    %{
+      Transaction:
+        swagger_schema do
+          title("Transaction")
+          description("A transaction made by an user")
+
+          properties do
+            transaction_id(:string, "Unique identifier of a transaction", required: true)
+            user_id(:integer, "User who make a transaction", required: true)
+            mount(:integer, "Amount of transaction")
+            token(:string, "To verify wallet correspondence")
+            type(:integer, "Identify the kind of transaction")
+
+            id_method_payment(
+              :integer,
+              "In case of wallet recharging is used to identify methos user for payment"
+            )
+          end
+
+          example(%{
+            transaction_id: 10,
+            user_id: 1,
+            mount: 3000,
+            token: "algo",
+            type: 1,
+            id_method_payment: 1
+          })
+        end,
+      Transactions:
+        swagger_schema do
+          title("Transactions")
+          description("A collection of transactions")
+          type(:array)
+          items(Schema.ref(:Transaction))
+        end
+    }
+  end
+
   def index(conn, _params) do
     transaction = Module.list_transaction()
     render(conn, "index.json", transaction: transaction)

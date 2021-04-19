@@ -16,9 +16,8 @@ defmodule TransactionWeb.WalletController do
     produces("application/json")
     tag("wallet")
     # operationId("getwallets")
-    paging
     # parameters ()
-    response(200, "OK")
+    response(200, "OK", Schema.ref(:Wallets))
     response(400, "Not found")
   end
 
@@ -29,10 +28,9 @@ defmodule TransactionWeb.WalletController do
     description("This can create a wallet for a logged user")
     produces("application/json")
     tag("wallet")
-    # operationId("getwallets")
-    paging
+    # operationId("getwallets"
     # parameters ()
-    response(200, "OK")
+    response(200, "OK", Schema.ref(:Wallet))
     response(400, "Not found")
   end
 
@@ -44,12 +42,39 @@ defmodule TransactionWeb.WalletController do
      description ("For search an specific wallet")
   produces ("application/json")
   tag "wallet"
-  #operationId("getwallets")
-  paging
+  #operationId("getwallets"
   #parameter :id, :path
   parameter :id, :path, :integer, "WalletID", required: true, example: 1
-  response 200, "OK"
+  response 200, "OK", Schema.ref(:Wallet)
   response 400, "Not found"
+  end
+
+
+  def swagger_definitions do
+    %{
+      Wallet: swagger_schema do
+        title "Wallet"
+        description "A wallet related to a user"
+        properties do
+          wallet_id :string, "Unique identifier of a wallet", required: true
+          user_id :integer, "Owner of the wallet", required: true
+          balance :integer, "Wallet balance"
+          token :string, "Wallet token"
+        end
+        example %{
+          wallet_id: 4,
+          user_id: 5,
+          balance: 10000,
+          token: "DU7342w98weujafbsaxvw324734w"
+        }
+      end,
+      Wallets: swagger_schema do
+        title "Wallets"
+        description "A collection of Wallets"
+        type :array
+        items Schema.ref(:Wallet)
+      end
+    }
   end
 
 
