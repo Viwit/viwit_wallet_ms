@@ -107,6 +107,27 @@ defmodule TransactionWeb.TransController do
     render(conn, "show.json", trans: trans)
   end
 
+  def show_by_wallet(conn, %{"wallet_id" => wallet_id}) do
+    transaction = Module.get_trans_by_wallet(wallet_id)
+    render(conn, "index.json", transaction: transaction)
+  end
+
+  def show_by_state(conn, %{"wallet_id" => wallet_id, "status" => status}) do
+    transaction = Module.get_trans_status(wallet_id, status)
+    render(conn, "index.json", transaction: transaction)
+  end
+
+  def show_by_kind(conn, %{"wallet_id" => wallet_id, "type" => type}) do
+    transaction = Module.get_trans_kind(wallet_id, type)
+    render(conn, "index.json", transaction: transaction)
+  end
+
+  def show_by_date(conn, %{"wallet_id" => wallet_id, "date" => date}) do
+    transaction = Module.get_trans_kind(wallet_id, date)
+    render(conn, "index.json", transaction: transaction)
+  end
+
+
   def update(conn, %{"id" => id, "trans" => trans_params}) do
     trans = Module.get_trans!(id)
 

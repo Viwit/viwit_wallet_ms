@@ -11,11 +11,17 @@ defmodule TransactionWeb.TransView do
   end
 
   def render("trans.json", %{trans: trans}) do
-    %{id: trans.id,
+    %{
+      id: trans.id,
       wallet_id: trans.wallet_id,
       id_method_payment: trans.id_method_payment,
       mount: trans.mount,
       type: trans.type,
-      status: trans.status}
+      status: trans.status,
+      date:
+        DateTime.from_naive!(trans.inserted_at, "Etc/UTC")
+        |> DateTime.to_string()
+        |> String.slice(0..9)
+    }
   end
 end

@@ -95,7 +95,6 @@ defmodule TransactionWeb.WalletController do
   end
 
   def show(conn, %{"id" => id}) do
-    IO.inspect(conn)
     wallet = Module.get_wallet!(id)
     render(conn, "show.json", wallet: wallet)
   end

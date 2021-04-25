@@ -133,6 +133,26 @@ defmodule Transaction.Module do
   """
   def get_trans!(id), do: Repo.get!(Trans, id)
 
+  def get_trans_by_wallet(wid) do
+    query = from(t in Trans, where: t.wallet_id == ^wid)
+    Repo.all(query)
+  end
+
+  def get_trans_status(wid, stat) do
+    query = from(t in Trans, where: t.wallet_id == ^wid and  t.status == ^stat)
+    Repo.all(query)
+  end
+
+  def get_trans_kind(wid, kind) do
+    query = from(t in Trans, where: t.wallet_id == ^wid and  t.type == ^kind)
+    Repo.all(query)
+  end
+
+  def get_trans_date(wid, date) do
+    query = from(t in Trans, where: t.wallet_id == ^wid and  t.date == ^date)
+    Repo.all(query)
+  end
+
   @doc """
   Creates a trans.
 

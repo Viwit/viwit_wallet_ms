@@ -9,6 +9,11 @@ defmodule TransactionWeb.Router do
     pipe_through :api
     resources "/wallet", WalletController, except: [:delete, :new, :edit, :update]
     resources "/transaction", TransController, except: [:update, :delete, :new, :edit]
+    get "/transaction/wallet/:wallet_id", TransController, :show_by_wallet
+    get "/transaction/wallet/:wallet_id/:status", TransController, :show_by_state
+    get "/transaction/wallet/:wallet_id/type/:type", TransController, :show_by_kind
+    get "/transaction/wallet/:wallet_id/:date", TransController, :show_by_date
+
   end
 
   def swagger_info do
